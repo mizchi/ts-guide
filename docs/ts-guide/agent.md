@@ -5,7 +5,7 @@ This guide covers setup for known coding agents:
 - Claude (Anthropic)
 - Cursor IDE
 - Cline (VS Code extension)
-- Roo AI
+- Roo Code
 - GitHub Copilot
 
 ## Base Prompt (Shared)
@@ -22,6 +22,7 @@ All AI assistants use this common base prompt:
 - Export a function that matches the filename, keep everything else private
 - All lint errors must be fixed before committing code
 - .oxlintrc.json must not be modified without user permission
+- When importing Node.js standard library modules, use the `node:` namespace prefix (e.g., `import path from "node:path"`, `import fs from "node:fs"`)
 - **IMPORTANT**: Always run `pnpm check` before committing to ensure all tests pass and code meets quality standards
 
 ## Error Handling Policy
