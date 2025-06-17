@@ -3,7 +3,7 @@
 Automate the npm package release process with version bumping and publishing.
 
 ```
-/project:release
+/release
 ```
 
 ## What it does
@@ -31,18 +31,18 @@ Automate the npm package release process with version bumping and publishing.
 
 Basic release (patch version):
 ```
-/project:release
+/release
 ```
 
 Specify version type:
 ```
-/project:release minor
-/project:release major
+/release minor
+/release major
 ```
 
 Monorepo - publish specific package:
 ```
-/project:release --directory packages/my-package
+/release --directory packages/my-package
 ```
 
 ## Process Flow

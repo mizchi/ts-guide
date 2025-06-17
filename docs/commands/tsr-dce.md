@@ -3,7 +3,7 @@
 `tsr` (ts-remove-unused) is a tool for detecting and removing unused TypeScript code.
 
 ```
-/project:tsr-dce
+/tsr-dce
 ```
 
 ## Usage

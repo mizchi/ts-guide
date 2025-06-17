@@ -3,7 +3,7 @@
 Split complex tasks into sequential steps, where each step can contain multiple parallel subtasks.
 
 ```
-/project:orchestrator <...your-instruction>
+/orchestrator <...your-instruction>
 ```
 
 ## Process

@@ -5,7 +5,7 @@ Detect inconsistencies between documentation and actual implementation.
 ## Usage
 
 ```
-/project:sync-doc
+/sync-doc
 ```
 
 ## What it does
@@ -39,7 +39,7 @@ Detect inconsistencies between documentation and actual implementation.
 ## Example
 
 ```
-/project:sync-docs
+/sync-docs
 
 Found 3 issues:
 🔴 README.md references 'src/utils.js' but file is 'src/utils.ts'
