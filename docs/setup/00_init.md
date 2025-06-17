@@ -127,7 +127,7 @@ Choose one of the following options for AI assistant integration:
 - **Claude (Anthropic)**: For use with Claude Desktop or API
 - **Cursor**: For Cursor IDE integration
 - **Cline (formerly Claude Dev)**: For VS Code extension
-- **Roo**: For Roo AI assistant
+- **Roo**: For RooCode assistant
 
 For detailed setup instructions, see [agent_prompt.md](03_prompt.md).
 
@@ -157,6 +157,22 @@ pnpm approve-builds
 
 This command was executed to approve the esbuild package build and resolve pnpm warnings related to the `"onlyBuiltDependencies": ["esbuild"]` configuration in package.json.
 
+## Post-Actions (Additional Setup Options)
+
+After completing the initial project setup, the following options can be added as needed.
+
+### 1. Bundler
+
+Bundler setup with Vite or tsdown is available. See **[bundler.md](bundler.md)** for details.
+
+### 2. Workspace
+
+Workspace conversion and Turborepo integration setup is available. See **[workspace.md](workspace.md)** for details.
+
+### 3. Linter
+
+Linter setup with ESLint or oxlint is available. See **[linter.md](linter.md)** for details.
+
 ## Setup Summary
 
 The following components were set up in this project:
@@ -164,3 +180,4 @@ The following components were set up in this project:
 1. **Baseline Setup**: TypeScript, Vitest, pnpm configuration
 2. **Optional Components**: PROMPT files for AI assistant integration, error handling
 3. **Build Approval**: pnpm approve-builds for esbuild
+4. **Post-Actions**: Bundler options (Vite/tsdown), Monorepo setup, Linting tools (ESLint/oxlint)
