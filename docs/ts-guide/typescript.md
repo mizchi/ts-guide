@@ -18,6 +18,8 @@ The baseline setup uses the following `tsconfig.json` configuration:
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "types": ["vitest/importMeta"]
   }
 }
@@ -31,25 +33,13 @@ The baseline setup uses the following `tsconfig.json` configuration:
 - `allowImportingTsExtensions`: Allow `.ts` extensions in imports (for Deno compatibility)
 - `strict: true`: Enable all strict type checking options
 - `skipLibCheck`: Skip type checking of declaration files for faster builds
+- `noUnusedLocals: true`: Error on unused local variables
+- `noUnusedParameters: false`: Allow unused function parameters (useful for interface implementations)
 
-## React Configuration
+## Performance Optimization with TypeScript Native Preview (Optional)
 
-For React projects, add the following to your `tsconfig.json`:
-
-```json
-{
-  "compilerOptions": {
-    // ... existing options
-    "jsx": "react-jsx",
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "types": ["vitest/importMeta", "@types/react", "@types/react-dom"]
-  }
-}
-```
-
-## Performance Optimization with TypeScript Native Preview
-
-Microsoft provides an experimental TypeScript implementation called `@typescript/native-preview` that offers significantly faster type checking performance.
+**When to use**: Large codebases with slow type checking  
+**Recommended**: No (experimental, use with caution)
 
 ### Installation
 
@@ -69,49 +59,53 @@ Replace `tsc` with `tsgo` in your scripts:
 }
 ```
 
+### VS Code Integration
+
+While you can enable tsgo in VS Code with the following setting, **this is not recommended**:
+
+```json
+// .vscode/settings.json
+{
+  "typescript.experimental.useTsgo": true
+}
+```
+
+**Why not recommended**: Using tsgo in the IDE can lead to inconsistencies between your editor and the standard TypeScript compiler.
+
 ### Benefits
 
 - **Faster Type Checking**: The native implementation can be several times faster than the standard TypeScript compiler
 - **Drop-in Replacement**: Works with existing TypeScript configurations
 - **Experimental Features**: Access to cutting-edge TypeScript features before they land in the stable release
 
-### Considerations
+### Important Considerations
 
 - This is an experimental preview and may have bugs or missing features
-- Not recommended for production builds yet
+- **Only use for the `typecheck` script**, not for builds or IDE integration
+- **If you encounter any differences between `tsc` and `tsgo` output, stop using tsgo immediately**
+- Not recommended for production builds
 - Best suited for development-time type checking to improve iteration speed
 - Monitor the [official announcement](https://devblogs.microsoft.com/typescript/announcing-typescript-native-previews/) for updates
 
-## Performance Tips
+### Recommended Approach
 
-1. **Enable Incremental Compilation**:
-   ```json
-   {
-     "compilerOptions": {
-       "incremental": true,
-       "tsBuildInfoFile": ".tsbuildinfo"
-     }
-   }
-   ```
+```json
+{
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "typecheck:fast": "tsgo --noEmit"
+  }
+}
+```
 
-2. **Optimize Module Resolution**:
-   ```json
-   {
-     "compilerOptions": {
-       "moduleResolution": "bundler",
-       "resolveJsonModule": true,
-       "allowJs": false
-     }
-   }
-   ```
-
-3. **Use `skipLibCheck` wisely**: While it improves performance, ensure you trust your dependencies' type definitions.
-
-4. **For monorepos**: See [workspace.md](workspace.md) for TypeScript Project References configuration.
+Use `typecheck:fast` during development if you need faster feedback, but always verify with standard `tsc` before committing.
 
 ## Advanced Configuration Options
 
 ### Strict Mode Options
+
+**When to use**: New projects  
+**Recommended**: Yes (use `"strict": true`)
 
 ```json
 {
@@ -130,22 +124,10 @@ Replace `tsc` with `tsgo` in your scripts:
 }
 ```
 
-### Path Mapping
-
-```json
-{
-  "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"],
-      "@components/*": ["src/components/*"],
-      "@utils/*": ["src/utils/*"]
-    }
-  }
-}
-```
-
 ### Output Configuration
+
+**When to use**: Library packages  
+**Recommended**: Yes for libraries, No for applications
 
 ```json
 {
@@ -159,51 +141,103 @@ Replace `tsc` with `tsgo` in your scripts:
 }
 ```
 
-## Integration with Build Tools
+## Building Without Bundlers
 
-### Vite
+**When to use**: Library packages without bundling  
+**Recommended**: Yes for publishable libraries
 
-Vite has built-in TypeScript support but doesn't perform type checking during build. Use `tsc` or `tsgo` in parallel:
+### Separate Output for JavaScript and Type Declarations
 
 ```json
 {
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "declarationDir": "./dist-types",
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "allowImportingTsExtensions": false
+  },
+  "include": ["src/**/*"],
+  "exclude": ["**/*.test.ts", "**/*.spec.ts"]
+}
+```
+
+**Note**: When building for distribution, set `allowImportingTsExtensions: false` and remove `.ts` extensions from imports.
+
+### Package.json Exports Configuration
+
+Configure your `package.json` to properly expose both JavaScript and TypeScript types:
+
+```json
+{
+  "name": "@your-scope/package-name",
+  "version": "1.0.0",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist-types/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./utils": {
+      "types": "./dist-types/utils.d.ts",
+      "import": "./dist/utils.js",
+      "default": "./dist/utils.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist-types/index.d.ts",
+  "files": ["dist", "dist-types", "!**/*.test.*", "!**/*.spec.*"],
   "scripts": {
-    "build": "tsc && vite build",
-    "dev": "vite"
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "clean": "rm -rf dist dist-types"
   }
 }
 ```
 
-### esbuild
-
-esbuild doesn't perform type checking. Always run TypeScript separately:
+### Build Scripts
 
 ```json
 {
   "scripts": {
-    "build": "tsc && esbuild src/index.ts --bundle --outfile=dist/index.js",
-    "build:fast": "tsgo && esbuild src/index.ts --bundle --outfile=dist/index.js"
+    "build": "tsc",
+    "clean": "rm -rf dist dist-types",
+    "prepublishOnly": "pnpm run clean && pnpm run build"
   }
 }
 ```
 
-## Troubleshooting
+### Advanced Exports with Subpath Patterns
 
-### Common Issues
+**When to use**: Multi-entry point libraries  
+**Recommended**: Optional
 
-1. **Slow Type Checking**: Consider using `@typescript/native-preview` or enabling incremental compilation
-2. **Memory Issues**: Increase Node.js memory limit: `NODE_OPTIONS="--max-old-space-size=4096" tsc`
-3. **Module Resolution Errors**: Ensure `moduleResolution` matches your build tool's behavior
-
-### Debugging TypeScript Configuration
-
-```bash
-# Show resolved configuration
-tsc --showConfig
-
-# Trace module resolution
-tsc --traceResolution
-
-# List files included in compilation
-tsc --listFiles
+```json
+{
+  "exports": {
+    ".": {
+      "types": "./dist-types/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./*": {
+      "types": "./dist-types/*.d.ts",
+      "import": "./dist/*.js"
+    },
+    "./components": {
+      "types": "./dist-types/components/index.d.ts",
+      "import": "./dist/components/index.js"
+    },
+    "./components/*": {
+      "types": "./dist-types/components/*.d.ts",
+      "import": "./dist/components/*.js"
+    }
+  }
+}
 ```

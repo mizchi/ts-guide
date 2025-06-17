@@ -1,6 +1,6 @@
 # Linter Setup Guide
 
-This document provides concise setup instructions for ESLint and oxlint linters.
+This document provides concise setup instructions for ESLint, oxlint, and Biome linters.
 
 ## ESLint
 
@@ -39,10 +39,13 @@ pnpm add eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin -D
 {
   "scripts": {
     "lint": "eslint src/**/*.ts",
-    "lint:fix": "eslint src/**/*.ts --fix"
+    "lint:fix": "eslint src/**/*.ts --fix",
+    "check:file": "eslint"
   }
 }
 ```
+
+> **Note**: The `check:file` command allows linting specific files: `pnpm check:file src/index.ts`
 
 ### Advanced Configuration
 
@@ -67,7 +70,61 @@ pnpm add @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint-confi
 
 oxlint is a Rust-based linter that provides extremely fast linting with zero configuration.
 
+### Overview
+
+Biome is an all-in-one toolchain that combines linting, formatting, and import organization. Written in Rust for performance.
+
 ### Setup
+
+```bash
+# Install Biome
+pnpm add -D @biomejs/biome
+```
+
+### Configuration (biome.json)
+
+```json
+{
+  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "style": {
+        "noNonNullAssertion": "off",
+        "useConst": "error"
+      },
+      "correctness": {
+        "noUnusedVariables": "error"
+      }
+    }
+  },
+  "formatter": {
+    "enabled": false
+  },
+  "files": {
+    "ignore": ["node_modules", "dist", "coverage", "*.min.js"]
+  }
+}
+```
+
+### Package.json Scripts
+
+```json
+{
+  "scripts": {
+    "lint": "biome lint .",
+    "lint:fix": "biome lint --write .",
+    "check:file": "biome lint"
+  }
+}
+```
+
+> **Note**: The `check:file` command allows linting specific files: `pnpm check:file src/index.ts`
+
+Note: If using Biome for linting, you can also enable its formatter and disable other formatters to have a unified toolchain.
+
+## oxlint Setup
 
 ```bash
 # Install oxlint
@@ -79,10 +136,13 @@ pnpm add oxlint -D
 ```json
 {
   "scripts": {
-    "lint": "oxlint"
+    "lint": "oxlint",
+    "check:file": "oxlint"
   }
 }
 ```
+
+> **Note**: The `check:file` command allows linting specific files: `pnpm check:file src/index.ts`
 
 ### Configuration (.oxlintrc.json)
 
@@ -98,6 +158,28 @@ pnpm add oxlint -D
     "typescript/no-explicit-any": "error"
   },
   "ignorePatterns": ["node_modules", "dist", "build", "coverage", "*.min.js"]
+}
+```
+
+## Check Script Integration
+
+When adding a linter, update the main `check` script to include lint checking:
+
+```json
+{
+  "scripts": {
+    "check": "pnpm typecheck && pnpm test && pnpm lint"
+  }
+}
+```
+
+If you have both formatter and linter:
+
+```json
+{
+  "scripts": {
+    "check": "pnpm typecheck && pnpm test && pnpm format:check && pnpm lint"
+  }
 }
 ```
 
@@ -138,6 +220,13 @@ jobs:
 - Ideal for large codebases
 - Good for CI/CD pipelines
 
+### Biome
+
+- Use when you want unified linting and formatting
+- Excellent performance due to Rust implementation
+- Good TypeScript support out of the box
+- Consider for new projects or when migrating from multiple tools
+
 ## Troubleshooting
 
 ### ESLint
@@ -151,6 +240,12 @@ jobs:
 - **Missing rules**: Check oxlint documentation for supported rules
 - **Configuration**: Ensure .oxlintrc.json is valid JSON
 - **File patterns**: Use correct glob patterns for file matching
+
+### Biome
+
+- **Rule conflicts**: Disable conflicting formatters when using Biome
+- **Migration**: Use `biome migrate` to convert ESLint config
+- **Performance**: Generally faster than ESLint, comparable to oxlint
 
 ## Migration
 

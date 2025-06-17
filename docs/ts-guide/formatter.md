@@ -38,10 +38,13 @@ pnpm-lock.yaml
 {
   "scripts": {
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "check:file": "prettier --check"
   }
 }
 ```
+
+> **Note**: The `check:file` command allows checking specific files: `pnpm check:file src/index.ts`
 
 ### VSCode Integration
 
@@ -113,10 +116,13 @@ Create `biome.json`:
 {
   "scripts": {
     "format": "biome format --write .",
-    "format:check": "biome format ."
+    "format:check": "biome format .",
+    "check:file": "biome format"
   }
 }
 ```
+
+> **Note**: The `check:file` command allows checking specific files: `pnpm check:file src/index.ts`
 
 ### VSCode Integration
 
@@ -165,3 +171,28 @@ If the file already exists, merge these settings carefully with the existing con
 ## Integration with Existing Tools
 
 Both formatters work well with the existing oxlint setup. If using Biome, you may want to disable oxlint to avoid redundancy, as Biome includes its own linter.
+
+### Check Script Integration
+
+When adding a formatter, update the main `check` script to include format checking:
+
+```json
+{
+  "scripts": {
+    "check": "pnpm typecheck && pnpm test && pnpm format:check"
+  }
+}
+```
+
+## CI/CD Integration
+
+The project includes GitHub Actions configuration that runs format checks in CI. The `format:check` command ensures code formatting consistency across the team.
+
+```yaml
+# In .github/workflows/ci.yaml
+- run: pnpm format:check
+```
+
+This prevents unformatted code from being merged. Developers should run `pnpm format` locally before committing to avoid CI failures.
+
+See `docs/setup/ci.md` for complete CI configuration details.

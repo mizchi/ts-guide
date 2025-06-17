@@ -22,6 +22,7 @@ All AI assistants use this common base prompt:
 - Export a function that matches the filename, keep everything else private
 - All lint errors must be fixed before committing code
 - .oxlintrc.json must not be modified without user permission
+- **IMPORTANT**: Always run `pnpm check` before committing to ensure all tests pass and code meets quality standards
 
 ## Error Handling Policy
 - Do not throw exceptions in application code
@@ -53,7 +54,7 @@ All AI assistants use this common base prompt:
 
 ### Roo
 
-**When to use:** Roo AI assistant
+**When to use:** Roo Code assistant
 
 **Base file:** `.roo/rules/rules.md`
 

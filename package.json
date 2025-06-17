@@ -4,12 +4,15 @@
   "scripts": {
     "lint": "oxlint --silent",
     "lint:strict": "oxlint --deny-warnings",
+    "format": "biome format --write .",
+    "format:check": "biome format .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:cov": "vitest run --coverage"
   },
   "license": "MIT",
   "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
     "@types/node": "^24.0.0",
     "@vitest/coverage-v8": "3.2.3",
     "oxlint": "^1.1.0",
@@ -17,9 +20,7 @@
     "vitest": "^3.2.3"
   },
   "pnpm": {
-    "onlyBuiltDependencies": [
-      "esbuild"
-    ]
+    "onlyBuiltDependencies": ["esbuild"]
   },
   "dependencies": {
     "neverthrow": "^8.2.0"
