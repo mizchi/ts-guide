@@ -124,13 +124,28 @@ jobs:
 CLAUDE.md
 
 ```markdown
-## コーディングルール
+## Coding Rules
 
-- ファイル命名規則: `src/<snake_case>.ts`
-- `src/*.ts` には `src/*.test.ts` のテストを追加する
-- クラスの代わりに、関数と関数スコープを使用する
-- deno 互換性のためにインポートに `.ts` 拡張子を追加する。例: `import {} from "./x.ts"`
-- 明示的なユーザーの承認なしに、いかなる lint ルールも無効にしない
+- File naming convention: `src/<lowerCamelCase>.ts`
+- Add tests in `src/*.test.ts` for `src/*.ts`
+- Use functions and function scope instead of classes
+- Add `.ts` extension to imports for deno compatibility. Example: `import {} from "./x.ts"`
+- Do not disable any lint rules without explicit user approval
+- Export a function that matches the filename, and keep everything else as private as possible
+
+## Additional Prompt
+
+In our project, do not throw exceptions. Use neverthrow instead of throwing.
+
+## Design Policy
+
+This project follows a no-exceptions design policy:
+
+- Do not throw exceptions in application code
+- Use Result types for error handling instead of throwing
+- Prefer explicit error handling over implicit exception propagation
+- Choose between neverthrow library or custom Result type implementation
+- All functions that can fail should return Result<T, E> instead of throwing
 ```
 
 .claude/settings.json
@@ -159,8 +174,10 @@ pnpm add neverthrow
 Additional prompt:
 
 ```
-私たちのプロジェクトでは例外をスローしないでください。スローする代わりにneverthrowを使用してください
+In our project, do not throw exceptions. Use neverthrow instead of throwing.
 ```
+
+If you choose not to use neverthrow, proceed to [02_result_types.md](02_result_types.md) for custom Result type implementation.
 
 ## Additional Steps Performed
 
