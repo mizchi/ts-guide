@@ -79,50 +79,27 @@ pnpm add oxlint -D
 ```json
 {
   "scripts": {
-    "lint": "oxlint src",
-    "lint:fix": "oxlint src --fix"
+    "lint": "oxlint"
   }
 }
 ```
 
-### Configuration (oxlintrc.json)
+### Configuration (.oxlintrc.json)
 
 ```json
 {
-  "rules": {
-    "no-unused-vars": "error",
-    "no-console": "warn"
+  "plugins": ["promise", "import", "node"],
+  "categories": {
+    "correctness": "error",
+    "suspicious": "warn"
   },
-  "env": {
-    "node": true,
-    "es2022": true
-  }
+  "rules": {
+    "no-console": "warn",
+    "typescript/no-explicit-any": "error"
+  },
+  "ignorePatterns": ["node_modules", "dist", "build", "coverage", "*.min.js"]
 }
 ```
-
-### Advanced Usage
-
-```bash
-# Lint specific file types
-oxlint src --ext .ts,.tsx
-
-# Ignore patterns
-oxlint src --ignore-pattern "**/*.test.ts"
-
-# Output format
-oxlint src --format json
-```
-
-## Comparison
-
-| Feature            | ESLint              | oxlint     |
-| ------------------ | ------------------- | ---------- |
-| Speed              | Moderate            | Ultra-fast |
-| Plugin Ecosystem   | Extensive           | Limited    |
-| Configuration      | Highly customizable | Simple     |
-| TypeScript Support | Full (with plugins) | Built-in   |
-| Auto-fix           | Yes                 | Yes        |
-| Community          | Large               | Growing    |
 
 ## Integration with CI/CD
 
@@ -172,7 +149,7 @@ jobs:
 ### oxlint
 
 - **Missing rules**: Check oxlint documentation for supported rules
-- **Configuration**: Ensure oxlintrc.json is valid JSON
+- **Configuration**: Ensure .oxlintrc.json is valid JSON
 - **File patterns**: Use correct glob patterns for file matching
 
 ## Migration
@@ -180,7 +157,7 @@ jobs:
 ### From ESLint to oxlint
 
 1. Install oxlint
-2. Create basic oxlintrc.json
+2. Create basic .oxlintrc.json
 3. Test on small subset of files
 4. Gradually replace ESLint scripts
 

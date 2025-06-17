@@ -1,0 +1,10 @@
+{
+  "editor.formatOnSave": true,
+  "eslint.enable": false,
+  "oxc.enable": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "never",
+    "source.fixAll.eslint": "never"
+  },
+  "typescript.preferences.includePackageJsonAutoImports": "auto"
+}

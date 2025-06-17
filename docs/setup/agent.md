@@ -20,6 +20,8 @@ All AI assistants use this common base prompt:
 - Add `.ts` extension to imports for deno compatibility
 - Do not disable any lint rules without explicit user approval
 - Export a function that matches the filename, keep everything else private
+- All lint errors must be fixed before committing code
+- .oxlintrc.json must not be modified without user permission
 
 ## Error Handling Policy
 - Do not throw exceptions in application code

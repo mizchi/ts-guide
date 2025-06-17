@@ -2,6 +2,8 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "lint": "oxlint --silent",
+    "lint:strict": "oxlint --deny-warnings",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:cov": "vitest run --coverage"
@@ -10,6 +12,7 @@
   "devDependencies": {
     "@types/node": "^24.0.0",
     "@vitest/coverage-v8": "3.2.3",
+    "oxlint": "^1.1.0",
     "typescript": "^5.8.3",
     "vitest": "^3.2.3"
   },

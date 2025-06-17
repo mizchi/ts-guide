@@ -1,0 +1,16 @@
+{
+  "plugins": ["promise", "import", "node"],
+  "categories": {
+    "correctness": "error",
+    "suspicious": "warn",
+    "pedantic": "warn"
+  },
+  "rules": {
+    "no-console": "warn",
+    "eslint/max-depth": ["error", { "max": 10 }],
+    "eslint/max-lines-per-function": ["error", { "max": 20 }],
+    "eslint/max-nested-callbacks": ["error", { "max": 20 }],
+    "typescript/no-explicit-any": "error"
+  },
+  "ignorePatterns": ["node_modules", "dist", "build", "coverage", "*.min.js"]
+}
