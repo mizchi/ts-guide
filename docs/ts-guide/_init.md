@@ -8,7 +8,7 @@ To quickly create a new project using this template:
 
 ```bash
 # Put this document under your `docs/ts-guide`
-tiged mizchi/ts-guide/docs/ts-guide ./docs/ts-guide
+npx -y tiged mizchi/ts-guide/docs/ts-guide ./docs/ts-guide
 # run with claude code
 claude "Setup this project by docs/ts-guide/_init.md"
 claude "Eject unused document by docs/ts-guide/eject.md"
@@ -16,6 +16,18 @@ claude "Eject unused document by docs/ts-guide/eject.md"
 
 > **Note**: This Quick Start section describes how to place this documentation itself in your project.
 > During actual project execution, this section should be ignored as it serves only as a setup reference for humans.
+
+## For Existing Projects
+
+If your project already has TypeScript and basic tooling configured, **skip to the Post-Actions section** to add specific features:
+
+- [typescript.md](typescript.md) - Advanced TypeScript configuration
+- [linter.md](linter.md) - Add ESLint, oxlint, or Biome
+- [formatter.md](formatter.md) - Add Prettier or Biome
+- [error-handling.md](error-handling.md) - Add Result types
+- [bundler.md](bundler.md) - Add Vite or tsdown
+- [workspace.md](workspace.md) - Convert to monorepo
+- [ci.md](ci.md) - Setup GitHub Actions
 
 ## Baseline Setup
 
@@ -156,6 +168,21 @@ pnpm approve-builds
 ```
 
 This command was executed to approve the esbuild package build and resolve pnpm warnings related to the `"onlyBuiltDependencies": ["esbuild"]` configuration in package.json.
+
+## Verify Setup
+
+After completing the baseline setup, verify that everything is working correctly:
+
+```bash
+pnpm check
+```
+
+This command will run:
+
+- Type checking with TypeScript
+- All tests with Vitest
+
+If all checks pass, your project is correctly configured and ready for development.
 
 ## Post-Actions (Additional Setup Options)
 

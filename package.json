@@ -8,9 +8,12 @@
     "format:check": "biome format .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:cov": "vitest run --coverage"
+    "test:cov": "vitest run --coverage",
+    "check": "pnpm typecheck && pnpm test && pnpm format:check"
   },
-  "license": "MIT",
+  "dependencies": {
+    "neverthrow": "^8.2.0"
+  },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
     "@types/node": "^24.0.0",
@@ -19,10 +22,8 @@
     "typescript": "^5.8.3",
     "vitest": "^3.2.3"
   },
+  "license": "MIT",
   "pnpm": {
     "onlyBuiltDependencies": ["esbuild"]
-  },
-  "dependencies": {
-    "neverthrow": "^8.2.0"
   }
 }

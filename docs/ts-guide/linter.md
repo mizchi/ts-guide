@@ -1,6 +1,62 @@
 # Linter Setup Guide
 
-This document provides concise setup instructions for ESLint, oxlint, and Biome linters.
+This document provides concise setup instructions for oxlint, ESLint, and Biome linters.
+
+## oxlint (Recommended)
+
+### Overview
+
+oxlint is a Rust-based linter that provides extremely fast linting with zero configuration. It offers:
+
+- **Blazing Fast Performance**: Written in Rust, it's significantly faster than JavaScript-based linters
+- **Comprehensive Rule Set**: Includes most essential ESLint rules and TypeScript-specific rules
+- **Zero Configuration**: Works out of the box with sensible defaults
+- **Growing Ecosystem**: Actively maintained with regular updates and new rules
+
+### Setup
+
+```bash
+# Install oxlint
+pnpm add -D oxlint
+```
+
+### Package.json Scripts
+
+```json
+{
+  "scripts": {
+    "lint": "oxlint --silent",
+    "lint:strict": "oxlint --deny-warnings",
+    "check:file": "oxlint"
+  }
+}
+```
+
+> **Note**: The `check:file` command allows linting specific files: `pnpm check:file src/index.ts`
+
+### Configuration (.oxlintrc.json)
+
+```json
+{
+  "plugins": ["promise", "import", "node"],
+  "categories": {
+    "correctness": "error",
+    "suspicious": "warn"
+  },
+  "rules": {
+    "no-console": "warn",
+    "typescript/no-explicit-any": "error"
+  },
+  "ignorePatterns": ["node_modules", "dist", "build", "coverage", "*.min.js"]
+}
+```
+
+### CI Integration
+
+```yaml
+# In .github/workflows/ci.yaml
+- run: pnpm lint
+```
 
 ## ESLint
 
@@ -12,25 +68,29 @@ ESLint is the standard JavaScript/TypeScript linter with extensive plugin ecosys
 
 ```bash
 # Install ESLint with TypeScript support
-pnpm add eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin -D
+pnpm add -D eslint @eslint/js @types/eslint__js typescript-eslint
 ```
 
-### Configuration (.eslintrc.json)
+### Configuration (eslint.config.ts)
 
-```json
-{
-  "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint"],
-  "extends": ["eslint:recommended", "@typescript-eslint/recommended"],
-  "parserOptions": {
-    "ecmaVersion": 2022,
-    "sourceType": "module"
+```typescript
+import eslint from "@eslint/js";
+import tseslint from "typescript-eslint";
+
+export default tseslint.config(
+  eslint.configs.recommended,
+  ...tseslint.configs.recommended,
+  {
+    files: ["**/*.ts", "**/*.tsx"],
+    rules: {
+      "@typescript-eslint/no-unused-vars": "error",
+      "@typescript-eslint/explicit-function-return-type": "warn"
+    }
   },
-  "rules": {
-    "@typescript-eslint/no-unused-vars": "error",
-    "@typescript-eslint/explicit-function-return-type": "warn"
+  {
+    ignores: ["node_modules", "dist", "coverage", "*.min.js"]
   }
-}
+);
 ```
 
 ### Package.json Scripts
@@ -50,25 +110,29 @@ pnpm add eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin -D
 ### Advanced Configuration
 
 ```bash
-# Add popular presets
-pnpm add @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint-config-prettier -D
+# Add Prettier compatibility
+pnpm add -D eslint-config-prettier
 ```
 
-```json
-{
-  "extends": [
-    "eslint:recommended",
-    "@typescript-eslint/recommended",
-    "prettier"
-  ]
-}
+```typescript
+import eslint from "@eslint/js";
+import tseslint from "typescript-eslint";
+import prettier from "eslint-config-prettier";
+
+export default tseslint.config(
+  eslint.configs.recommended,
+  ...tseslint.configs.recommended,
+  prettier,
+  {
+    files: ["**/*.ts", "**/*.tsx"],
+    rules: {
+      // Your custom rules
+    }
+  }
+);
 ```
 
-## oxlint
-
-### Overview
-
-oxlint is a Rust-based linter that provides extremely fast linting with zero configuration.
+## Biome
 
 ### Overview
 
@@ -124,56 +188,32 @@ pnpm add -D @biomejs/biome
 
 Note: If using Biome for linting, you can also enable its formatter and disable other formatters to have a unified toolchain.
 
-## oxlint Setup
+## Selection Guidelines
 
-```bash
-# Install oxlint
-pnpm add oxlint -D
-```
+### Choose oxlint when:
 
-### Package.json Scripts
+- Performance is critical
+- You want zero configuration
+- You need fast CI/CD feedback
+- Your project uses standard linting rules
 
-```json
-{
-  "scripts": {
-    "lint": "oxlint",
-    "check:file": "oxlint"
-  }
-}
-```
+### Choose ESLint when:
 
-> **Note**: The `check:file` command allows linting specific files: `pnpm check:file src/index.ts`
+- You need specific plugins or custom rules
+- Your team has existing ESLint configurations
+- You require deep customization
+- You need compatibility with specific tools
 
-### Configuration (.oxlintrc.json)
+### Choose Biome when:
 
-```json
-{
-  "plugins": ["promise", "import", "node"],
-  "categories": {
-    "correctness": "error",
-    "suspicious": "warn"
-  },
-  "rules": {
-    "no-console": "warn",
-    "typescript/no-explicit-any": "error"
-  },
-  "ignorePatterns": ["node_modules", "dist", "build", "coverage", "*.min.js"]
-}
-```
+- You want unified linting and formatting
+- Performance is important
+- You prefer a single tool for code quality
+- You're starting a new project
 
-## Check Script Integration
+## Integration with check script
 
-When adding a linter, update the main `check` script to include lint checking:
-
-```json
-{
-  "scripts": {
-    "check": "pnpm typecheck && pnpm test && pnpm lint"
-  }
-}
-```
-
-If you have both formatter and linter:
+When adding a linter, update the main `check` script to include linting:
 
 ```json
 {
@@ -183,35 +223,30 @@ If you have both formatter and linter:
 }
 ```
 
-## Integration with CI/CD
+## Migration Strategies
 
-### GitHub Actions
+### From ESLint to oxlint
 
-```yaml
-name: Lint
-on: [push, pull_request]
-jobs:
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: pnpm
-      - run: pnpm install
-      - run: pnpm lint
-```
+1. Install oxlint
+2. Create basic .oxlintrc.json
+3. Run both linters in parallel during transition
+4. Gradually remove ESLint
+
+### From oxlint to ESLint
+
+1. Install ESLint dependencies
+2. Create eslint.config.ts based on oxlint rules
+3. Add necessary plugins
+4. Remove oxlint
+
+### From ESLint/Prettier to Biome
+
+1. Install Biome
+2. Run `biome migrate` to convert configurations
+3. Disable Prettier
+4. Remove ESLint if using Biome for linting
 
 ## Best Practices
-
-### ESLint
-
-- Use with Prettier for formatting
-- Extend recommended configurations
-- Add project-specific rules gradually
-- Use eslint-disable comments sparingly
 
 ### oxlint
 
@@ -219,6 +254,13 @@ jobs:
 - Combine with other tools for comprehensive checking
 - Ideal for large codebases
 - Good for CI/CD pipelines
+
+### ESLint
+
+- Use with Prettier for formatting
+- Extend recommended configurations
+- Add project-specific rules gradually
+- Use eslint-disable comments sparingly
 
 ### Biome
 
@@ -229,17 +271,17 @@ jobs:
 
 ## Troubleshooting
 
-### ESLint
-
-- **Parsing errors**: Check parser configuration
-- **Rule conflicts**: Use eslint-config-prettier
-- **Performance**: Use .eslintignore for large files
-
 ### oxlint
 
 - **Missing rules**: Check oxlint documentation for supported rules
 - **Configuration**: Ensure .oxlintrc.json is valid JSON
 - **File patterns**: Use correct glob patterns for file matching
+
+### ESLint
+
+- **Parsing errors**: Check parser configuration
+- **Rule conflicts**: Use eslint-config-prettier
+- **Performance**: Use .eslintignore for large files
 
 ### Biome
 
@@ -247,18 +289,6 @@ jobs:
 - **Migration**: Use `biome migrate` to convert ESLint config
 - **Performance**: Generally faster than ESLint, comparable to oxlint
 
-## Migration
+## CI/CD Integration
 
-### From ESLint to oxlint
-
-1. Install oxlint
-2. Create basic .oxlintrc.json
-3. Test on small subset of files
-4. Gradually replace ESLint scripts
-
-### From oxlint to ESLint
-
-1. Install ESLint with TypeScript support
-2. Create .eslintrc.json with equivalent rules
-3. Add necessary plugins
-4. Update package.json scripts
+All linters support GitHub Actions integration. The `lint` command should be run in CI to ensure code quality consistency across the team.
