@@ -38,6 +38,10 @@ export default defineConfig({
         }
       }
     }
+  },
+  // Remove in-source testing code from production builds
+  define: {
+    "import.meta.vitest": "undefined"
   }
 });
 ```
@@ -50,13 +54,9 @@ export default defineConfig({
   "version": "1.0.0",
   "type": "module",
   "files": ["dist"],
-  "main": "./dist/my-library.umd.cjs",
-  "module": "./dist/my-library.js",
-  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/my-library.js",
-      "require": "./dist/my-library.umd.cjs",
       "types": "./dist/index.d.ts"
     }
   },
@@ -93,6 +93,17 @@ pnpm add tsdown -D
 npx tsdown
 ```
 
+### Package.json Scripts
+
+```json
+{
+  "scripts": {
+    "build": "tsdown",
+    "prepublishOnly": "pnpm build"
+  }
+}
+```
+
 ### Configuration (tsdown.config.ts)
 
 ```typescript
@@ -103,6 +114,9 @@ export default defineConfig({
   format: ["esm"],
   dts: true,
   clean: true,
+  define: {
+    "import.meta.vitest": "undefined"
+  }
 });
 ```
 
@@ -125,14 +139,28 @@ export default defineConfig({
 
 ## Best Practices
 
+### In-Source Testing
+
+When using Vitest's in-source testing feature, add the following to your bundler config:
+
+```typescript
+define: {
+  "import.meta.vitest": "undefined"
+}
+```
+
+This ensures that test code is removed from production builds.
+
 ### Vite
 
 - Use for frontend applications
 - Leverage plugins for framework integration
 - Configure build.lib for library mode
+- Add define config for in-source testing
 
 ### tsdown
 
 - Use for library publishing
 - Migrate gradually from tsup
 - Enable DTS generation for TypeScript libraries
+- Add define config for in-source testing

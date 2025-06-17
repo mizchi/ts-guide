@@ -91,6 +91,7 @@ Available commands:
 - **sync-doc**: Detect inconsistencies between documentation and implementation
 - **tsr-dce**: Find and remove unused TypeScript code
 - **orchestrator**: Generate multiple agents for complex tasks
+- **release**: Automate npm package release with version bumping
 
 ### Setup
 
@@ -116,6 +117,12 @@ Copy orchestrator command:
 
 ```bash
 npx -y tiged mizchi/ts-guide/docs/commands/orchestrator.md .claude/commands/orchestrator.md
+```
+
+Copy release command:
+
+```bash
+npx -y tiged mizchi/ts-guide/docs/commands/release.md .claude/commands/release.md
 ```
 
 Commands are now available in Claude Code with `/`
