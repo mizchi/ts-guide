@@ -25,9 +25,7 @@
   },
   "license": "MIT",
   "pnpm": {
-    "onlyBuiltDependencies": [
-      "esbuild"
-    ]
+    "onlyBuiltDependencies": ["esbuild"]
   },
   "engines": {
     "pnpm": ">=8.0.0",
