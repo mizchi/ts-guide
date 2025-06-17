@@ -103,11 +103,13 @@ vitest.config.ts
 import { defineConfig } from "vitest/config";
 export default defineConfig({
   test: {
-    includeSource: ["src/**/*.{ts}"],
+    includeSource: ["src/**/*.ts"],
     include: ["src/**/*.{test,spec}.{ts}"],
   },
 });
 ```
+
+> **Note**: The `includeSource` pattern should be `["src/**/*.ts"]` without curly braces. Using `["src/**/*.{ts}"]` will cause Vitest to not find in-source tests.
 
 Entry point: src/index.ts
 
