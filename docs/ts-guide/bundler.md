@@ -1,53 +1,77 @@
-# Bundler Setup Guide
+# Library Bundler Setup Guide
 
-This document provides concise setup instructions for Vite and tsdown bundlers.
+This document provides setup instructions for bundling TypeScript libraries with Vite Library Mode and tsdown.
 
-## Vite
+## Vite (Library Mode)
 
 ### Overview
 
-Vite is a fast build tool with instant HMR (Hot Module Replacement) for modern web development.
+Vite can bundle TypeScript libraries using its Library Mode. For application development, see [vite.md](vite.md).
 
-### Setup
+### Setup for Libraries
 
 ```bash
 # Install Vite
-pnpm add vite -D
+pnpm add -D vite
 ```
 
-Add scripts to package.json:
-
-```json
-{
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
-  }
-}
-```
-
-### Basic Configuration (vite.config.ts)
+### Library Configuration (vite.config.ts)
 
 ```typescript
 import { defineConfig } from "vite";
+import { resolve } from "path";
 
 export default defineConfig({
   build: {
     lib: {
-      entry: "./src/index.ts",
-      name: "MyLib",
-      fileName: (format) => `my-lib.${format}.js`,
+      entry: resolve(__dirname, "src/index.ts"),
+      name: "MyLibrary",
+      fileName: "my-library"
     },
-  },
+    rollupOptions: {
+      // Externalize dependencies that shouldn't be bundled
+      external: ["react", "react-dom"],
+      output: {
+        globals: {
+          react: "React",
+          "react-dom": "ReactDOM"
+        }
+      }
+    }
+  }
 });
+```
+
+### Package.json for Library
+
+```json
+{
+  "name": "my-library",
+  "version": "1.0.0",
+  "type": "module",
+  "files": ["dist"],
+  "main": "./dist/my-library.umd.cjs",
+  "module": "./dist/my-library.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/my-library.js",
+      "require": "./dist/my-library.umd.cjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc && vite build",
+    "prepublishOnly": "pnpm build"
+  }
+}
 ```
 
 ### Use Cases
 
-- Frontend development with HMR
-- Modern build pipeline
-- Framework-agnostic projects
+- Publishing npm packages
+- Building component libraries
+- Creating utility libraries
 
 ## tsdown
 

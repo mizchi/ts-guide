@@ -25,7 +25,9 @@ If your project already has TypeScript and basic tooling configured, **skip to t
 - [linter.md](linter.md) - Add ESLint, oxlint, or Biome
 - [formatter.md](formatter.md) - Add Prettier or Biome
 - [error-handling.md](error-handling.md) - Add Result types
-- [bundler.md](bundler.md) - Add Vite or tsdown
+- [fp.md](fp.md) - Functional domain modeling patterns
+- [bundler.md](bundler.md) - Bundle TypeScript libraries
+- [vite.md](vite.md) - Build web applications with Vite
 - [workspace.md](workspace.md) - Convert to monorepo
 - [ci.md](ci.md) - Setup GitHub Actions
 
@@ -187,10 +189,13 @@ If all checks pass, your project is correctly configured and ready for developme
 ## Post-Actions (Additional Setup Options)
 
 - **TypeScript**: See [typescript.md](typescript.md) for advanced TypeScript configuration and performance optimization
-- **Bundler**: See [bundler.md](bundler.md) for Vite or tsdown setup
-- **Workspace**: See [workspace.md](workspace.md) for monorepo conversion
 - **Linter**: See [linter.md](linter.md) for ESLint, oxlint, or Biome setup
 - **Formatter**: See [formatter.md](formatter.md) for Prettier or Biome setup
+- **Error Handling**: See [error-handling.md](error-handling.md) for Result types with neverthrow
+- **Domain Modeling**: See [fp.md](fp.md) for functional programming patterns
+- **Library Bundling**: See [bundler.md](bundler.md) for Vite Library Mode or tsdown
+- **Web Applications**: See [vite.md](vite.md) for Vite application setup
+- **Workspace**: See [workspace.md](workspace.md) for monorepo conversion
 
 ## Cleanup
 
