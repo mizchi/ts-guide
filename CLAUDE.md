@@ -1,7 +1,7 @@
 ## Coding Rules
 
 - File naming convention: `src/<lowerCamelCase>.ts`
-- Add tests in `src/*.test.ts` for `src/*.ts`
+- Add tests in `src/*.test.ts` for `src/*.ts` or in `test/*.test.ts`
 - Use functions and function scope instead of classes
 - Add `.ts` extension to imports for deno compatibility. Example: `import {} from "./x.ts"`
 - Do not disable any lint rules without explicit user approval
