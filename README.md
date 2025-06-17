@@ -28,6 +28,9 @@ cd your-project-name
 rm -rf .git  # Remove the original git history
 git init     # Initialize a new git repository
 
+# Setup Claude commands
+mv docs/commands .claude/commands
+
 # initial setup with claude
 claude "Setup this project by docs/ts-guide/_init.md"
 # optional: cleanup
@@ -77,6 +80,47 @@ This template includes several opinionated decisions:
 - **TypeScript**: Strict configuration with modern ESM support
 
 These choices are based on performance, developer experience, and modern best practices. You can customize them after initial setup if needed.
+
+---
+
+## Claude Commands
+
+The documents in `docs/commands/` can be used as custom slash commands in Claude Code by placing them in `.claude/commands/`.
+
+Available commands:
+- **sync-doc**: Detect inconsistencies between documentation and implementation
+- **tsr-dce**: Find and remove unused TypeScript code
+- **orchestrator**: Generate multiple agents for complex tasks
+
+### Setup
+
+Create commands directory:
+
+```bash
+mkdir -p .claude/commands
+```
+
+Copy sync-doc command:
+
+```bash
+npx -y tiged mizchi/ts-guide/docs/commands/sync-doc.md .claude/commands/sync-doc.md
+```
+
+Copy tsr-dce command:
+
+```bash
+npx -y tiged mizchi/ts-guide/docs/commands/tsr-dce.md .claude/commands/tsr-dce.md
+```
+
+Copy orchestrator command:
+
+```bash
+npx -y tiged mizchi/ts-guide/docs/commands/orchestrator.md .claude/commands/orchestrator.md
+```
+
+Commands are now available in Claude Code with `/`
+
+For more information: https://docs.anthropic.com/en/docs/claude-code/common-workflows#create-custom-slash-commands
 
 ## license
 
