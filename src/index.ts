@@ -1,5 +1,5 @@
 /**
- * このモジュールの説明
+ * module api
  */
 export function index() {
   return true;

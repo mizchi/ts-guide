@@ -2,6 +2,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "preinstall": "npx -y only-allow pnpm",
     "lint": "oxlint --silent",
     "lint:strict": "oxlint --deny-warnings",
     "format": "biome format --write .",
@@ -24,6 +25,13 @@
   },
   "license": "MIT",
   "pnpm": {
-    "onlyBuiltDependencies": ["esbuild"]
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
+  },
+  "engines": {
+    "pnpm": ">=8.0.0",
+    "npm": "please-use-pnpm",
+    "yarn": "please-use-pnpm"
   }
 }
