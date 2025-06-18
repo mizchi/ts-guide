@@ -5,7 +5,22 @@
 ```bash
 # Create new Deno project
 mkdir my-deno-project && cd my-deno-project
-deno init
+
+# Create deno.jsonc configuration file
+cat > deno.jsonc << 'EOF'
+{
+  "tasks": {
+    "dev": "deno run --watch src/mod.ts",
+    "test": "deno test --reporter=dot",
+    "test:cov": "deno test --coverage=coverage && deno coverage coverage",
+    "check": "deno check **/*.ts && deno lint && deno fmt --check && deno test --reporter=dot"
+  },
+  "imports": {}
+}
+EOF
+
+# Create source directory
+mkdir src
 
 # Add test dependencies
 deno add jsr:@std/expect
@@ -22,31 +37,49 @@ my-deno-project/
 └── .gitignore
 ```
 
-## Configuration: deno.jsonc
+## Initial Source Files
 
-```jsonc
-{
-  "tasks": {
-    "dev": "deno run --watch src/mod.ts",
-    "test": "deno test --reporter=dot",
-    "test:cov": "deno test --coverage=coverage && deno coverage coverage",
-    "check": "deno check **/*.ts && deno lint && deno fmt --check && deno test --reporter=dot"
-  },
-  "imports": {
-    // Managed by deno add
-  }
+Create the main module and test files:
+
+```bash
+# Create main module
+cat > src/mod.ts << 'EOF'
+/**
+ * Main module export
+ */
+export function mod(): string {
+  return "Hello from Deno!";
 }
+EOF
+
+# Create test file
+cat > src/mod.test.ts << 'EOF'
+import { expect } from "@std/expect";
+import { mod } from "./mod.ts";
+
+Deno.test("basic test", () => {
+  expect(mod()).toBe("Hello from Deno!");
+});
+
+Deno.test("return type test", () => {
+  const result = mod();
+  expect(typeof result).toBe("string");
+});
+EOF
 ```
 
 ## VS Code Configuration
 
 Create `.vscode/settings.json` to enable Deno support:
 
-```json
+```bash
+mkdir -p .vscode
+cat > .vscode/settings.json << 'EOF'
 {
   "deno.enable": true,
   "deno.lint": true
 }
+EOF
 ```
 
 ## Writing Tests
@@ -98,8 +131,16 @@ cd worktrees/deno
 ### 既存プロジェクトからの移行
 
 1. Node.js関連ファイルを削除
-2. `deno init` で初期化
-3. デフォルトファイルを削除し、プロジェクト構造に合わせて再作成
-4. `deno fmt` で全ファイルをフォーマット
+2. `deno.jsonc` と必要なファイルを手動で作成
+3. `deno fmt` で全ファイルをフォーマット
+4. `deno task check` でプロジェクトの整合性を確認
 
 詳細は [setup-log.md](./setup-log.md) を参照してください。
+
+### なぜ `deno init` を使わないのか
+
+`deno init` は以下の制限があるため、手動でファイルを作成することを推奨します：
+
+- `deno.json` しか生成できない（`deno.jsonc` は生成不可）
+- デフォルトファイル名が `main.ts` で、プロジェクト規約と異なる
+- 生成されたファイルの削除と再作成が必要になる
