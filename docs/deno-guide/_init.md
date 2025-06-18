@@ -7,7 +7,7 @@
 ```bash
 # Create new Deno project
 mkdir my-deno-project && cd my-deno-project
-deno init --lib
+deno init
 
 # Add test dependencies
 deno add jsr:@std/expect
@@ -30,8 +30,9 @@ my-deno-project/
 {
   "tasks": {
     "dev": "deno run --watch src/mod.ts",
-    "test": "deno test",
-    "check": "deno check **/*.ts && deno lint && deno fmt --check && deno test"
+    "test": "deno test --reporter=dot",
+    "test:cov": "deno test --coverage=coverage && deno coverage coverage",
+    "check": "deno check **/*.ts && deno lint && deno fmt --check && deno test --reporter=dot"
   },
   "imports": {
     // Managed by deno add
@@ -39,24 +40,15 @@ my-deno-project/
 }
 ```
 
-## Essential Commands
+## VS Code Configuration
 
-```bash
-# Development
-deno run src/mod.ts          # Run code
-deno test                    # Run tests
-deno fmt                     # Format code
-deno lint                    # Lint code
-deno check src/mod.ts        # Type check
+Create `.vscode/settings.json` to enable Deno support:
 
-# Package management
-deno add jsr:@std/expect     # Add JSR package
-deno add npm:zod@4           # Add npm package
-deno install                 # Install from deno.jsonc
-
-# Tasks
-deno task dev                # Run with watch
-deno task check              # Run all checks
+```json
+{
+  "deno.enable": true,
+  "deno.lint": true
+}
 ```
 
 ## Writing Tests

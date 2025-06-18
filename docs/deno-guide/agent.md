@@ -30,11 +30,45 @@ All AI assistants use this common base prompt:
 - Node.js built-ins: use `node:` prefix (e.g., `import fs from "node:fs"`)
 - NEVER use `https://` imports
 
+## Functional Programming Style
+- Prefer functions over classes for business logic
+- Use pure functions whenever possible
+- Minimize side effects and encapsulate them clearly
+- Use function composition for complex operations
+- Keep functions small and focused on a single responsibility
+
 ## Error Handling Policy
-- Do not throw exceptions in application code
-- Use Result types for error handling instead of throwing
-- Choose between neverthrow library or custom Result type
-- All functions that can fail should return Result<T, E> instead of throwing
+
+This project follows a strict no-exceptions design policy:
+
+- **NEVER throw exceptions** in application code
+- **ALWAYS use Result types** for error handling instead of throwing
+- **ALL functions that can fail** must return `Result<T, E>` instead of throwing
+- Use explicit error handling over implicit exception propagation
+
+### Result Type Implementation
+
+Choose one of the following implementations:
+
+**Option 1: neverthrow library (Recommended)**
+
+- Install: `pnpm add neverthrow`
+- Import: `import { Result, ok, err } from "neverthrow"`
+- Use `result.isOk()` and `result.isErr()` for type checking
+
+**Option 2: Custom Result type**
+
+- Use the custom implementation from `src/utils/result.ts`
+- Import: `import { Result, ok, err, isOk, isErr } from "./utils/result.ts"`
+- Use `isOk(result)` and `isErr(result)` helper functions for type checking
+
+### Mandatory Practices
+
+1. **Function Return Types**: All functions that can fail must return `Result<SuccessType, ErrorType>`
+2. **Error Checking**: Always use `isOk()` / `isErr()` or `result.isOk()` / `result.isErr()` for type-safe error checking
+3. **No Exception Throwing**: Never use `throw` statements in application code
+4. **Async Operations**: Wrap promises with `fromAsyncThrowable()` when using custom Result type
+5. **External Libraries**: Wrap third-party code that might throw using `fromThrowable()` or `fromAsyncThrowable()`
 ```
 
 ## Assistant Configurations
