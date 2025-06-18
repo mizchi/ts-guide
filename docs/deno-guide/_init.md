@@ -1,7 +1,5 @@
 # Deno Project Setup Guide
 
-(WIP: Not tested)
-
 ## Quick Start
 
 ```bash
@@ -83,3 +81,25 @@ deno run -A script.ts                # All permissions
 - **JSR packages**: Modern JavaScript registry
 - **No node_modules**: Global dependency cache
 - **Web standards**: fetch, URL, and other web APIs
+
+## Setup Tips
+
+### Git Worktree での開発
+
+既存のNode.jsプロジェクトからDenoへ移行する場合、git worktreeを使用すると便利です：
+
+```bash
+# worktreeをサブディレクトリに作成
+mkdir -p worktrees
+git worktree add worktrees/deno deno -b deno
+cd worktrees/deno
+```
+
+### 既存プロジェクトからの移行
+
+1. Node.js関連ファイルを削除
+2. `deno init` で初期化
+3. デフォルトファイルを削除し、プロジェクト構造に合わせて再作成
+4. `deno fmt` で全ファイルをフォーマット
+
+詳細は [setup-log.md](./setup-log.md) を参照してください。
