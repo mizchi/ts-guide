@@ -15,7 +15,18 @@ cat > deno.jsonc << 'EOF'
     "test:cov": "deno test --coverage=coverage && deno coverage coverage",
     "check": "deno check **/*.ts && deno lint && deno fmt --check && deno test --reporter=dot"
   },
-  "imports": {}
+  "imports": {},
+  "exports": {
+    ".": "./src/mod.ts"
+  },
+  "lint": {
+    "include": ["src/"],
+    "exclude": ["coverage/"],
+    "rules": {
+      "tags": ["recommended"],
+      "exclude": ["no-explicit-any", "no-console"]
+    }
+  }
 }
 EOF
 
@@ -32,9 +43,35 @@ deno add jsr:@std/expect
 my-deno-project/
 ├── src/
 │   ├── mod.ts        # Main entry point
-│   └── mod_test.ts   # Tests
+│   └── mod.test.ts   # Tests
 ├── deno.jsonc        # Configuration
 └── .gitignore
+```
+
+## Configuration Details
+
+### exports
+パッケージのエントリーポイントを定義します。JSRやnpmで公開する際に重要です：
+```jsonc
+"exports": {
+  ".": "./src/mod.ts"
+}
+```
+
+### lint
+Denoの組み込みリンターの設定：
+```jsonc
+"lint": {
+  "include": ["src/"],           // リント対象ディレクトリ
+  "exclude": ["coverage/"],      // 除外ディレクトリ
+  "rules": {
+    "tags": ["recommended"],     // 推奨ルールセット
+    "exclude": [                 // 除外するルール
+      "no-explicit-any",         // any型の使用を許可
+      "no-console"               // console.logの使用を許可
+    ]
+  }
+}
 ```
 
 ## Initial Source Files
