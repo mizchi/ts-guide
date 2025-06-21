@@ -149,7 +149,7 @@ pnpm add -D @biomejs/biome
 
 ```json
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.0.0/schema.json",
   "linter": {
     "enabled": true,
     "rules": {
@@ -167,7 +167,13 @@ pnpm add -D @biomejs/biome
     "enabled": false
   },
   "files": {
-    "ignore": ["node_modules", "dist", "coverage", "*.min.js"]
+    "includes": [
+      "**",
+      "!node_modules/**",
+      "!dist/**",
+      "!coverage/**",
+      "!**/*.min.js"
+    ]
   }
 }
 ```

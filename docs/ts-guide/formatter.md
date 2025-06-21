@@ -86,9 +86,15 @@ Create `biome.json`:
 
 ```json
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
-  "organizeImports": {
-    "enabled": true
+  "$schema": "https://biomejs.dev/schemas/2.0.0/schema.json",
+  "assist": {
+    "enabled": true,
+    "actions": {
+      "recommended": false,
+      "source": {
+        "organizeImports": "on"
+      }
+    }
   },
   "formatter": {
     "enabled": true,
@@ -105,7 +111,13 @@ Create `biome.json`:
     "enabled": false
   },
   "files": {
-    "ignore": ["node_modules", "dist", "coverage", "*.min.js"]
+    "includes": [
+      "**",
+      "!node_modules/**",
+      "!dist/**",
+      "!coverage/**",
+      "!**/*.min.js"
+    ]
   }
 }
 ```

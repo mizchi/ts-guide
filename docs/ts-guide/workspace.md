@@ -52,7 +52,7 @@ Update the root `package.json` to include workspace configuration:
     "dev": "pnpm -r dev"
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.9.0",
+    "@biomejs/biome": "^2.0.0",
     "@types/node": "^24.0.0",
     "@vitest/coverage-v8": "3.2.3",
     "oxlint": "^0.17.1",
@@ -133,9 +133,15 @@ Create a root `biome.json` for formatting:
 
 ```json
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
-  "organizeImports": {
-    "enabled": true
+  "$schema": "https://biomejs.dev/schemas/2.0.0/schema.json",
+  "assist": {
+    "enabled": true,
+    "actions": {
+      "recommended": false,
+      "source": {
+        "organizeImports": "on"
+      }
+    }
   },
   "linter": {
     "enabled": false
